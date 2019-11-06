@@ -12,5 +12,5 @@ describe('actions', () => {
     
     expect(result).toEqual(expectedAction);
 
-  })
-})
+  });
+});
