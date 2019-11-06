@@ -48,6 +48,16 @@ describe('Orders container', () => {
     expect(wrapper.state().ingredients).toEqual(expected);
   })
 
+  it.only('should register if the form is complete or not', () => {
+    expect(wrapper.state().formComplete).toEqual(false);
+    wrapper.setState({ name: 'Chris' });
+    wrapper.instance().checkForm();
+    expect(wrapper.state().formComplete).toEqual(false);
+    wrapper.setState({ ingredients: ['steak'] });
+    wrapper.instance().checkForm();
+    expect(wrapper.state().formComplete).toEqual(true);
+  })
+
   describe('mapDispatchToProps', () => {
     it('should call setOrders action when handleSubmit is called', () => {
       const mockDispatch = jest.fn();
