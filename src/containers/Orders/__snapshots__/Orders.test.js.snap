@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Orders should match the snapshot 1`] = `
+exports[`Orders container should match the snapshot 1`] = `
 <section>
   <div
     className="order"
