@@ -8,18 +8,6 @@ jest.mock('../../apiCalls');
 
 describe('Orders container', () => {
   let wrapper
-  // const mockOrders = [
-  //   {
-  //     id: 1,
-  //     name: 'Chris',
-  //     ingredients: ['steak', 'queso']
-  //   },
-  //   {
-  //     id: 2,
-  //     name: 'Not Chris',
-  //     ingredients: ['chicken', 'siracha']
-  //   }
-  // ]
   const mockSetOrders = jest.fn();
   getOrders.mockImplementation(() => {
     return Promise.resolve({
@@ -37,5 +25,16 @@ describe('Orders container', () => {
     expect(wrapper).toMatchSnapshot();
   });
 
+  describe('mapDispatchToProps', () => {
+    it('should call setOrders action when handleSubmit is called', () => {
+      const mockDispatch = jest.fn();
+      const actionToDispatch = setOrders({name: 'chris', ingredients: ['cheese', 'steak']});
+      mapDispatchToProps(mockDispatch);
+      wrapper.setState({ name: 'chris', ingredients: ['cheese', 'steak'], formComplete: true });
+      wrapper.instance().handleSubmit();
+
+      expect(mockDispatch).toHaveBeenCalledWith(actionToDispatch);
+    })
+  });
 
 });
