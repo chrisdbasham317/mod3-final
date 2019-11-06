@@ -32,8 +32,9 @@ class OrderForm extends Component {
 
   handleSubmit = e => {
     e.preventDefault();
-
-    this.clearInputs();
+    if (this.state.formComplete === true) {
+      this.clearInputs();
+    }  
   }
 
   clearInputs = () => {
@@ -49,7 +50,6 @@ class OrderForm extends Component {
         </button>
       )
     });
-
     return (
       <form>
         <input
@@ -64,9 +64,13 @@ class OrderForm extends Component {
 
         <p>Order: { this.state.ingredients.join(', ') || 'Nothing selected' }</p>
 
-        <button onClick={e => this.handleSubmit(e)}>
+        {this.state.formComplete && <button onClick={e => this.handleSubmit(e)}>
           Submit Order
-        </button>
+        </button>}
+
+        {!this.state.formComplete && <button disabled='true'>
+          Submit Order
+        </button>}
       </form>
     )
   }
