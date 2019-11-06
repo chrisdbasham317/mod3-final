@@ -6,21 +6,33 @@ class OrderForm extends Component {
     this.props = props;
     this.state = {
       name: '',
-      ingredients: []
+      ingredients: [],
+      formComplete: false
     };
   }
 
   handleNameChange = e => {
     this.setState({ [e.target.name]: e.target.value });
+    this.checkForm();
   }
 
-  handleIngredientChange = e => {
+  handleIngredientChange = async e => {
     e.preventDefault();
-    this.setState({ingredients: [...this.state.ingredients, e.target.name]});
+    await this.setState({ ingredients: [...this.state.ingredients, e.target.name] });
+    this.checkForm();
+  }
+
+  checkForm() {
+    if (this.state.name !== '' && this.state.ingredients.length !== 0) {
+      this.setState({ formComplete: true });
+    } else {
+      this.setState({ formComplete: false });
+    }
   }
 
   handleSubmit = e => {
     e.preventDefault();
+
     this.clearInputs();
   }
 
