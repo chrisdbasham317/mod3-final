@@ -1,27 +1,49 @@
 import React, { Component } from 'react';
+import { submitOrder } from '../../apiCalls';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { setOrders } from '../../actions';
+import { getOrders } from '../../apiCalls';
 
-class OrderForm extends Component {
+export class OrderForm extends Component {
   constructor(props) {
     super();
     this.props = props;
     this.state = {
       name: '',
-      ingredients: []
+      ingredients: [],
+      formComplete: false
     };
   }
 
   handleNameChange = e => {
     this.setState({ [e.target.name]: e.target.value });
+    this.checkForm();
   }
 
-  handleIngredientChange = e => {
+  handleIngredientChange = async e => {
     e.preventDefault();
-    this.setState({ingredients: [...this.state.ingredients, e.target.name]});
+    await this.setState({ ingredients: [...this.state.ingredients, e.target.name] });
+    this.checkForm();
   }
 
-  handleSubmit = e => {
+  checkForm() {
+    if (this.state.name !== '' && this.state.ingredients.length !== 0) {
+      this.setState({ formComplete: true });
+    } else {
+      this.setState({ formComplete: false });
+    }
+  }
+
+  handleSubmit = async e => {
     e.preventDefault();
-    this.clearInputs();
+    if (this.state.formComplete === true) {
+      this.clearInputs();
+      await submitOrder(this.state.name, this.state.ingredients)
+      getOrders()
+        .then(data => this.props.setOrders(data.orders))
+        .catch(err => console.error('Error fetching:', err));
+    }  
   }
 
   clearInputs = () => {
@@ -37,7 +59,6 @@ class OrderForm extends Component {
         </button>
       )
     });
-
     return (
       <form>
         <input
@@ -52,12 +73,22 @@ class OrderForm extends Component {
 
         <p>Order: { this.state.ingredients.join(', ') || 'Nothing selected' }</p>
 
-        <button onClick={e => this.handleSubmit(e)}>
+        {this.state.formComplete && <button onClick={e => this.handleSubmit(e)}>
           Submit Order
-        </button>
+        </button>}
+
+        {!this.state.formComplete && <button disabled={true}>
+          Submit Order
+        </button>}
       </form>
     )
   }
 }
 
-export default OrderForm;
+export const mapDispatchToProps = dispatch => (
+  bindActionCreators({
+    setOrders,
+  }, dispatch)
+);
+
+export default connect(null, mapDispatchToProps)(OrderForm);
