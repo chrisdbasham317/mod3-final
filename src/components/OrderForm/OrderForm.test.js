@@ -25,6 +25,29 @@ describe('Orders container', () => {
     expect(wrapper).toMatchSnapshot();
   });
 
+  it('should update state when user types in a name', () => {
+    const mockEvent = {
+      target: {
+        name: 'name',
+        value: 'Chris'
+      }
+    }
+    wrapper.find('input').simulate('change', mockEvent);
+    expect(wrapper.state().name).toEqual('Chris');
+  });
+
+  it('should update state when an ingredient is selected', () => {
+    const mockEvent = {
+      preventDefault: jest.fn(),
+      target: {
+        name: 'steak'
+      }
+    };
+    const expected = ['steak']
+    wrapper.find('button').at(5).simulate('click', mockEvent);
+    expect(wrapper.state().ingredients).toEqual(expected);
+  })
+
   describe('mapDispatchToProps', () => {
     it('should call setOrders action when handleSubmit is called', () => {
       const mockDispatch = jest.fn();
