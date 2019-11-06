@@ -5,7 +5,7 @@ import { bindActionCreators } from 'redux';
 import { setOrders } from '../../actions';
 import { getOrders } from '../../apiCalls';
 
-class OrderForm extends Component {
+export class OrderForm extends Component {
   constructor(props) {
     super();
     this.props = props;
